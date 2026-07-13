@@ -30,7 +30,7 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
     // Delay video autoplay slightly to prevent playback triggers on fast scrolls
     hoverTimer.current = setTimeout(() => {
       setIsHovered(true);
-    }, 450);
+    }, 100);
   };
 
   const handleMouseLeave = () => {

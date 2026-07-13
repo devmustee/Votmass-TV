@@ -168,11 +168,11 @@ export default function ShortsPage() {
               className="w-full h-full snap-start snap-always relative flex flex-col justify-end bg-black"
             >
               {/* VIDEO PLAYER */}
-              {Math.abs(index - activeIndex) <= 1 ? (
+              {index === activeIndex ? (
                 short.youtubeUrl ? (
-                  <div className="absolute inset-0 w-full h-full">
+                  <div className="absolute inset-0 w-full h-full animate-in fade-in duration-300">
                     <iframe 
-                      src={`https://www.youtube.com/embed/${getYouTubeId(short.youtubeUrl)}?autoplay=${index === activeIndex ? '1' : '0'}&mute=${muted ? '1' : '0'}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(short.youtubeUrl)}&rel=0`} 
+                      src={`https://www.youtube.com/embed/${getYouTubeId(short.youtubeUrl)}?autoplay=1&mute=${muted ? '1' : '0'}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(short.youtubeUrl)}&rel=0`} 
                       width="100%" 
                       height="100%" 
                       frameBorder="0" 
@@ -182,9 +182,9 @@ export default function ShortsPage() {
                     />
                   </div>
                 ) : short.facebookUrl ? (
-                  <div className="absolute inset-0 w-full h-full">
+                  <div className="absolute inset-0 w-full h-full animate-in fade-in duration-300">
                     <iframe 
-                      src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(short.facebookUrl)}&show_text=0&autoplay=${index === activeIndex}&mute=${muted}`} 
+                      src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(short.facebookUrl)}&show_text=0&autoplay=1&mute=${muted ? '1' : '0'}`} 
                       width="100%" 
                       height="100%" 
                       style={{ border: 'none', overflow: 'hidden' }} 
