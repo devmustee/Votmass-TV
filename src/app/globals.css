@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F4510B;
+  --color-secondary: #C62800;
+  --color-dark: #08090B;
+  --color-surface: #181B22;
+  --color-card: #23262F;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A5ABB8;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-border-custom: rgba(255, 255, 255, 0.08);
+
+  --font-sans: var(--font-inter), sans-serif;
+
+  --animate-glow: glow 2s ease-in-out infinite;
+
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(244, 81, 11, 0.25);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(244, 81, 11, 0.45);
+    }
+  }
+}
+
+:root {
+  --background: #08090B;
+  --foreground: #FFFFFF;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #08090B;
+}
+::-webkit-scrollbar-thumb {
+  background: #23262F;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F4510B;
+}
+
+/* Custom Utilities */
+.glass-panel {
+  background: rgba(24, 27, 34, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #F4510B 0%, #C62800 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #F4510B 0%, #C62800 100%);
+}
+
+.glow-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(244, 81, 11, 0.25);
+  border-color: rgba(244, 81, 11, 0.4);
+  transform: translateY(-2px);
+}
+
+.shorts-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+  scrollbar-width: none; /* Firefox */
+}
+.shorts-container::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.shorts-card {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
