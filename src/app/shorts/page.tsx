@@ -11,6 +11,12 @@ import {
 import { useAppStore } from "@/lib/store";
 import { Video } from "@/lib/mockData";
 
+function getYouTubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 export default function ShortsPage() {
   const router = useRouter();
   const { 
@@ -162,15 +168,43 @@ export default function ShortsPage() {
               className="w-full h-full snap-start snap-always relative flex flex-col justify-end bg-black"
             >
               {/* VIDEO PLAYER */}
-              <video
-                ref={(el) => { videoRefs.current[index] = el; }}
-                src={short.url}
-                loop
-                muted={muted}
-                playsInline
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-              />
+              {short.youtubeUrl ? (
+                <div className="absolute inset-0 w-full h-full">
+                  <iframe 
+                    src={`https://www.youtube.com/embed/${getYouTubeId(short.youtubeUrl)}?autoplay=${index === activeIndex ? '1' : '0'}&mute=${muted ? '1' : '0'}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(short.youtubeUrl)}&rel=0`} 
+                    width="100%" 
+                    height="100%" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen={true}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              ) : short.facebookUrl ? (
+                <div className="absolute inset-0 w-full h-full">
+                  <iframe 
+                    src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(short.facebookUrl)}&show_text=0&autoplay=${index === activeIndex}&mute=${muted}`} 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 'none', overflow: 'hidden' }} 
+                    scrolling="no" 
+                    frameBorder="0" 
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                    allowFullScreen={true}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <video
+                  ref={(el) => { videoRefs.current[index] = el; }}
+                  src={short.url}
+                  loop
+                  muted={muted}
+                  playsInline
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="absolute inset-0 w-full h-full object-cover cursor-pointer"
+                />
+              )}
 
               {/* Tap play/pause indicator state display */}
               {!isPlaying && (
