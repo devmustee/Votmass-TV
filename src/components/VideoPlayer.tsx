@@ -8,6 +8,12 @@ import {
 import { useAppStore } from "@/lib/store";
 import { Video } from "@/lib/mockData";
 
+function getYouTubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 interface VideoPlayerProps {
   video: Video;
   onEnded?: () => void;
@@ -186,20 +192,49 @@ export default function VideoPlayer({ video, onEnded, autoplay = true }: VideoPl
       ref={containerRef}
       className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/5 select-none group"
     >
-      {/* HTML5 VIDEO TAG */}
-      <video
-        ref={videoRef}
-        src={video.url}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleVideoEnded}
-        onClick={handlePlayPause}
-        className="w-full h-full object-contain cursor-pointer"
-        playsInline
-      />
+      {/* NATIVE STREAM OR HTML5 FALLBACK */}
+      {video.youtubeUrl ? (
+        <div className="w-full h-full">
+          <iframe 
+            src={`https://www.youtube.com/embed/${getYouTubeId(video.youtubeUrl)}?autoplay=${autoplay ? '1' : '0'}&rel=0`} 
+            width="100%" 
+            height="100%" 
+            title={video.title}
+            frameBorder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            allowFullScreen={true}
+            className="w-full h-full"
+          />
+        </div>
+      ) : video.facebookUrl ? (
+        <div className="w-full h-full">
+          <iframe 
+            src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=${autoplay ? '1' : '0'}`} 
+            width="100%" 
+            height="100%" 
+            style={{ border: 'none', overflow: 'hidden' }} 
+            scrolling="no" 
+            frameBorder="0" 
+            allowFullScreen={true} 
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            className="w-full h-full"
+          />
+        </div>
+      ) : (
+        <video
+          ref={videoRef}
+          src={video.url}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={handleVideoEnded}
+          onClick={handlePlayPause}
+          className="w-full h-full object-contain cursor-pointer"
+          playsInline
+        />
+      )}
 
       {/* SUBTITLES OVERLAY */}
-      {subtitlesEnabled && isPlaying && (
+      {subtitlesEnabled && isPlaying && !video.youtubeUrl && !video.facebookUrl && (
         <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-black/75 px-4 py-2 rounded-xl text-center max-w-lg border border-white/10 z-10 animate-in fade-in duration-200">
           <p className="text-sm md:text-base font-medium text-white tracking-wide">
             [Subtitles] Speaking on Governance, Youth, and National Technology Frameworks.
@@ -244,125 +279,127 @@ export default function VideoPlayer({ video, onEnded, autoplay = true }: VideoPl
       )}
 
       {/* CUSTOM PLAYER CONTROLS PANEL */}
-      <div 
-        className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark/90 via-dark/50 to-transparent p-4 flex flex-col gap-3 transition-opacity duration-300 z-20 ${
-          showControls || !isPlaying ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        {/* Progress Slider bar */}
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] font-semibold font-mono text-text-secondary">{formatTime(currentTime)}</span>
-          <input
-            type="range"
-            min={0}
-            max={duration || 100}
-            value={currentTime}
-            onChange={handleSeek}
-            className="flex-1 accent-primary bg-white/10 h-1.5 rounded-full appearance-none cursor-pointer focus:outline-none"
-          />
-          <span className="text-[10px] font-semibold font-mono text-text-secondary">{formatTime(duration)}</span>
-        </div>
-
-        {/* Lower buttons controls */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            
-            {/* Play/Pause */}
-            <button 
-              onClick={handlePlayPause}
-              className="text-white hover:text-primary transition-colors focus:outline-none p-1 bg-white/5 rounded-full hover:bg-white/10"
-            >
-              {isPlaying ? <Pause size={18} fill="white" /> : <Play size={18} fill="white" />}
-            </button>
-
-            {/* Volume */}
-            <div className="flex items-center gap-2 group/volume">
-              <button onClick={toggleMute} className="text-white hover:text-primary transition-colors focus:outline-none">
-                {isMuted || volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
-              </button>
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.05}
-                value={isMuted ? 0 : volume}
-                onChange={handleVolumeChange}
-                className="w-16 h-1 bg-white/10 rounded-full accent-primary appearance-none cursor-pointer scale-x-0 origin-left group-hover/volume:scale-x-100 transition-transform duration-200"
-              />
-            </div>
-            
-            <span className="text-[11px] font-semibold text-white/90 truncate max-w-[200px] sm:max-w-sm hidden sm:inline">
-              {video.title}
-            </span>
+      {!video.youtubeUrl && !video.facebookUrl && (
+        <div 
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-dark/90 via-dark/50 to-transparent p-4 flex flex-col gap-3 transition-opacity duration-300 z-20 ${
+            showControls || !isPlaying ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          {/* Progress Slider bar */}
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] font-semibold font-mono text-text-secondary">{formatTime(currentTime)}</span>
+            <input
+              type="range"
+              min={0}
+              max={duration || 100}
+              value={currentTime}
+              onChange={handleSeek}
+              className="flex-1 accent-primary bg-white/10 h-1.5 rounded-full appearance-none cursor-pointer focus:outline-none"
+            />
+            <span className="text-[10px] font-semibold font-mono text-text-secondary">{formatTime(duration)}</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            
-            {/* Subtitles Button */}
-            <button 
-              onClick={toggleSubtitles}
-              className={`p-1 rounded-lg transition-colors focus:outline-none ${
-                subtitlesEnabled ? "bg-primary/20 text-primary" : "text-white hover:text-primary"
-              }`}
-              title="Toggle Captions"
-            >
-              <Subtitles size={18} />
-            </button>
-
-            {/* Playback speed trigger */}
-            <div className="relative">
+          {/* Lower buttons controls */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              
+              {/* Play/Pause */}
               <button 
-                onClick={() => setSpeedOpen(!speedOpen)}
-                className="text-white hover:text-primary transition-colors flex items-center gap-0.5 text-xs font-bold bg-white/5 hover:bg-white/10 px-2 py-1 rounded-lg"
+                onClick={handlePlayPause}
+                className="text-white hover:text-primary transition-colors focus:outline-none p-1 bg-white/5 rounded-full hover:bg-white/10"
               >
-                <Settings size={14} />
-                <span>{playbackSpeed}x</span>
+                {isPlaying ? <Pause size={18} fill="white" /> : <Play size={18} fill="white" />}
               </button>
 
-              {/* Speed Popover */}
-              {speedOpen && (
-                <div className="absolute bottom-10 right-0 w-24 bg-surface border border-white/10 rounded-xl p-1.5 shadow-2xl flex flex-col z-50">
-                  {[0.5, 1.0, 1.5, 2.0].map((spd) => (
-                    <button
-                      key={spd}
-                      onClick={() => {
-                        setPlaybackSpeed(spd);
-                        setSpeedOpen(false);
-                      }}
-                      className={`w-full py-1 text-center text-xs rounded-lg transition-colors font-bold ${
-                        playbackSpeed === spd 
-                          ? "bg-primary/15 text-primary" 
-                          : "text-text-secondary hover:text-white hover:bg-white/5"
-                      }`}
-                    >
-                      {spd}x
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* Volume */}
+              <div className="flex items-center gap-2 group/volume">
+                <button onClick={toggleMute} className="text-white hover:text-primary transition-colors focus:outline-none">
+                  {isMuted || volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                </button>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={isMuted ? 0 : volume}
+                  onChange={handleVolumeChange}
+                  className="w-16 h-1 bg-white/10 rounded-full accent-primary appearance-none cursor-pointer scale-x-0 origin-left group-hover/volume:scale-x-100 transition-transform duration-200"
+                />
+              </div>
+              
+              <span className="text-[11px] font-semibold text-white/90 truncate max-w-[200px] sm:max-w-sm hidden sm:inline">
+                {video.title}
+              </span>
             </div>
 
-            {/* Picture-in-picture */}
-            <button 
-              onClick={handlePip}
-              className="text-white hover:text-primary transition-colors focus:outline-none"
-              title="Picture in Picture"
-            >
-              <PictureInPicture size={18} />
-            </button>
+            <div className="flex items-center gap-4">
+              
+              {/* Subtitles Button */}
+              <button 
+                onClick={toggleSubtitles}
+                className={`p-1 rounded-lg transition-colors focus:outline-none ${
+                  subtitlesEnabled ? "bg-primary/20 text-primary" : "text-white hover:text-primary"
+                }`}
+                title="Toggle Captions"
+              >
+                <Subtitles size={18} />
+              </button>
 
-            {/* Fullscreen */}
-            <button 
-              onClick={toggleFullscreen}
-              className="text-white hover:text-primary transition-colors focus:outline-none"
-              title="Fullscreen"
-            >
-              {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-            </button>
+              {/* Playback speed trigger */}
+              <div className="relative">
+                <button 
+                  onClick={() => setSpeedOpen(!speedOpen)}
+                  className="text-white hover:text-primary transition-colors flex items-center gap-0.5 text-xs font-bold bg-white/5 hover:bg-white/10 px-2 py-1 rounded-lg"
+                >
+                  <Settings size={14} />
+                  <span>{playbackSpeed}x</span>
+                </button>
+
+                {/* Speed Popover */}
+                {speedOpen && (
+                  <div className="absolute bottom-10 right-0 w-24 bg-surface border border-white/10 rounded-xl p-1.5 shadow-2xl flex flex-col z-50">
+                    {[0.5, 1.0, 1.5, 2.0].map((spd) => (
+                      <button
+                        key={spd}
+                        onClick={() => {
+                          setPlaybackSpeed(spd);
+                          setSpeedOpen(false);
+                        }}
+                        className={`w-full py-1 text-center text-xs rounded-lg transition-colors font-bold ${
+                          playbackSpeed === spd 
+                            ? "bg-primary/15 text-primary" 
+                            : "text-text-secondary hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {spd}x
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Picture-in-picture */}
+              <button 
+                onClick={handlePip}
+                className="text-white hover:text-primary transition-colors focus:outline-none"
+                title="Picture in Picture"
+              >
+                <PictureInPicture size={18} />
+              </button>
+
+              {/* Fullscreen */}
+              <button 
+                onClick={toggleFullscreen}
+                className="text-white hover:text-primary transition-colors focus:outline-none"
+                title="Fullscreen"
+              >
+                {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+              </button>
+            </div>
           </div>
-        </div>
 
-      </div>
+        </div>
+      )}
 
     </div>
   );
