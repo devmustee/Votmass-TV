@@ -168,42 +168,58 @@ export default function ShortsPage() {
               className="w-full h-full snap-start snap-always relative flex flex-col justify-end bg-black"
             >
               {/* VIDEO PLAYER */}
-              {short.youtubeUrl ? (
-                <div className="absolute inset-0 w-full h-full">
-                  <iframe 
-                    src={`https://www.youtube.com/embed/${getYouTubeId(short.youtubeUrl)}?autoplay=${index === activeIndex ? '1' : '0'}&mute=${muted ? '1' : '0'}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(short.youtubeUrl)}&rel=0`} 
-                    width="100%" 
-                    height="100%" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen={true}
-                    className="absolute inset-0 w-full h-full object-cover"
+              {Math.abs(index - activeIndex) <= 1 ? (
+                short.youtubeUrl ? (
+                  <div className="absolute inset-0 w-full h-full">
+                    <iframe 
+                      src={`https://www.youtube.com/embed/${getYouTubeId(short.youtubeUrl)}?autoplay=${index === activeIndex ? '1' : '0'}&mute=${muted ? '1' : '0'}&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(short.youtubeUrl)}&rel=0`} 
+                      width="100%" 
+                      height="100%" 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen={true}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                ) : short.facebookUrl ? (
+                  <div className="absolute inset-0 w-full h-full">
+                    <iframe 
+                      src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(short.facebookUrl)}&show_text=0&autoplay=${index === activeIndex}&mute=${muted}`} 
+                      width="100%" 
+                      height="100%" 
+                      style={{ border: 'none', overflow: 'hidden' }} 
+                      scrolling="no" 
+                      frameBorder="0" 
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                      allowFullScreen={true}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <video
+                    ref={(el) => { videoRefs.current[index] = el; }}
+                    src={short.url}
+                    loop
+                    muted={muted}
+                    playsInline
+                    onClick={() => setIsPlaying(!isPlaying)}
+                    className="absolute inset-0 w-full h-full object-cover cursor-pointer"
                   />
-                </div>
-              ) : short.facebookUrl ? (
-                <div className="absolute inset-0 w-full h-full">
-                  <iframe 
-                    src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(short.facebookUrl)}&show_text=0&autoplay=${index === activeIndex}&mute=${muted}`} 
-                    width="100%" 
-                    height="100%" 
-                    style={{ border: 'none', overflow: 'hidden' }} 
-                    scrolling="no" 
-                    frameBorder="0" 
-                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
-                    allowFullScreen={true}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
+                )
               ) : (
-                <video
-                  ref={(el) => { videoRefs.current[index] = el; }}
-                  src={short.url}
-                  loop
-                  muted={muted}
-                  playsInline
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="absolute inset-0 w-full h-full object-cover cursor-pointer"
-                />
+                <div className="absolute inset-0 w-full h-full bg-black">
+                  <Image 
+                    src={short.thumbnailUrl} 
+                    alt={short.title}
+                    fill
+                    className="object-cover opacity-60"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="p-4 bg-dark/60 rounded-full">
+                      <Play size={32} fill="white" className="text-white ml-1" />
+                    </div>
+                  </div>
+                </div>
               )}
 
               {/* Tap play/pause indicator state display */}
@@ -278,7 +294,7 @@ export default function ShortsPage() {
               </div>
 
               {/* SHORT DETAIL DESCRIPTION TEXT (LOWER LEFT) */}
-              <div className="absolute left-4 right-20 bottom-8 z-30 space-y-2">
+              <div className="absolute left-4 right-20 bottom-20 z-30 space-y-2">
                 <span className="bg-primary/20 backdrop-blur-sm text-primary text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border border-primary/30">
                   {short.categoryName}
                 </span>
