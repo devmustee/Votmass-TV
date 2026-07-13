@@ -147,7 +147,7 @@ export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalP
             useFacebookPlayer && video.facebookUrl ? (
               <div className="absolute inset-0 w-full h-full">
                 <iframe 
-                  src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=true`} 
+                  src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=1`}
                   width="100%" 
                   height="100%" 
                   style={{ border: 'none', overflow: 'hidden' }} 

@@ -76,7 +76,7 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
           ) : video.facebookUrl ? (
             <div className="absolute inset-0 w-full h-full pointer-events-none scale-105">
               <iframe 
-                src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=true&mute=true`} 
+                src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=1&muted=1`} 
                 width="100%" 
                 height="100%" 
                 style={{ border: 'none', overflow: 'hidden' }} 
