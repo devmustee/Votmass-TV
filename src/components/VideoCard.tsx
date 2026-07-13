@@ -6,6 +6,12 @@ import { Play, Bookmark, Clock, Eye, Sparkles } from "lucide-react";
 import { Video } from "@/lib/mockData";
 import { useAppStore } from "@/lib/store";
 
+function getYouTubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 interface VideoCardProps {
   video: Video;
   onSelect: (video: Video) => void;
@@ -56,14 +62,40 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
       <div className="relative aspect-video w-full bg-surface overflow-hidden rounded-t-2xl">
         {/* Hover silent video autoplay */}
         {isHovered ? (
-          <video
-            src={video.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 animate-in fade-in"
-          />
+          video.youtubeUrl ? (
+            <div className="absolute inset-0 w-full h-full pointer-events-none scale-105">
+              <iframe 
+                src={`https://www.youtube.com/embed/${getYouTubeId(video.youtubeUrl)}?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(video.youtubeUrl)}&rel=0`} 
+                width="100%" 
+                height="100%" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              />
+            </div>
+          ) : video.facebookUrl ? (
+            <div className="absolute inset-0 w-full h-full pointer-events-none scale-105">
+              <iframe 
+                src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=true&mute=true`} 
+                width="100%" 
+                height="100%" 
+                style={{ border: 'none', overflow: 'hidden' }} 
+                scrolling="no" 
+                frameBorder="0" 
+                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              />
+            </div>
+          ) : (
+            <video
+              src={video.url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 animate-in fade-in"
+            />
+          )
         ) : (
           <Image
             src={video.thumbnailUrl}
