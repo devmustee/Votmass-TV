@@ -30,7 +30,7 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
     // Delay video autoplay slightly to prevent playback triggers on fast scrolls
     hoverTimer.current = setTimeout(() => {
       setIsHovered(true);
-    }, 100);
+    }, 50);
   };
 
   const handleMouseLeave = () => {
@@ -60,10 +60,19 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
     >
       {/* CARD MEDIA THUMBNAIL */}
       <div className="relative aspect-video w-full bg-surface overflow-hidden rounded-t-2xl">
-        {/* Hover silent video autoplay */}
-        {isHovered ? (
+        {/* Cover image always rendered under the player to prevent blank flashes */}
+        <Image
+          src={video.thumbnailUrl}
+          alt={video.title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+
+        {/* Hover silent video autoplay layered on top */}
+        {isHovered && (
           video.youtubeUrl ? (
-            <div className="absolute inset-0 w-full h-full pointer-events-none scale-105">
+            <div className="absolute inset-0 w-full h-full pointer-events-none scale-105 animate-in fade-in duration-300">
               <iframe 
                 src={`https://www.youtube.com/embed/${getYouTubeId(video.youtubeUrl)}?autoplay=1&mute=1&controls=0&modestbranding=1&loop=1&playlist=${getYouTubeId(video.youtubeUrl)}&rel=0`} 
                 width="100%" 
@@ -74,7 +83,7 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
               />
             </div>
           ) : video.facebookUrl ? (
-            <div className="absolute inset-0 w-full h-full pointer-events-none scale-105">
+            <div className="absolute inset-0 w-full h-full pointer-events-none scale-105 animate-in fade-in duration-300">
               <iframe 
                 src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=1&muted=1`} 
                 width="100%" 
@@ -96,18 +105,10 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
               className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 animate-in fade-in"
             />
           )
-        ) : (
-          <Image
-            src={video.thumbnailUrl}
-            alt={video.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
         )}
 
         {/* Muted overlay badge details */}
-        <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
           <div className="bg-primary hover:scale-110 transition-transform p-3 rounded-full shadow-lg shadow-primary/30">
             <Play size={18} fill="white" className="text-white ml-0.5" />
           </div>
@@ -115,14 +116,14 @@ export default function VideoCard({ video, onSelect }: VideoCardProps) {
 
         {/* Video Duration Badge */}
         {video.type !== "short" && (
-          <div className="absolute bottom-2.5 right-2.5 bg-dark/85 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-white/5 text-[10px] font-bold font-mono text-white flex items-center gap-1 z-10">
+          <div className="absolute bottom-2.5 right-2.5 bg-dark/85 backdrop-blur-sm px-2 py-0.5 rounded-lg border border-white/5 text-[10px] font-bold font-mono text-white flex items-center gap-1 z-10 pointer-events-none">
             <Clock size={10} />
             <span>{formatDuration(video.duration)}</span>
           </div>
         )}
 
         {/* Categories / Type badge */}
-        <div className="absolute top-2.5 left-2.5 z-10 flex gap-1.5">
+        <div className="absolute top-2.5 left-2.5 z-10 flex gap-1.5 pointer-events-none">
           <span className="bg-primary/20 backdrop-blur-sm text-primary text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-primary/30">
             {video.type}
           </span>
