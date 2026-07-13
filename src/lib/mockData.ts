@@ -25,6 +25,7 @@ export interface Video {
   likes: number;
   commentsCount: number;
   facebookUrl?: string;
+  youtubeUrl?: string;
 }
 
 export interface Comment {
@@ -66,6 +67,79 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const MOCK_VIDEOS: Video[] = [
+  // --- HAUSA YOUTUBE MOVIE & PODCAST SEEDS ---
+  {
+    id: "yt-1",
+    title: "Dadin Kowa Sabon Salo - Kashi na Farko 🎬",
+    description: "Cikakken shirin Dadin Kowa Sabon Salo Kashi na 1. Ku kalli yadda rayuwar al'umma ta sarrafa a cikin Dadin Kowa ta Arewa24. #Arewa24 #DadinKowa #HausaFilms",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+    youtubeUrl: "https://www.youtube.com/watch?v=0k5D-mS9e6c",
+    thumbnailUrl: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-5",
+    categoryName: "Movies",
+    type: "movie",
+    duration: 1450,
+    views: 452900,
+    featured: true,
+    trending: true,
+    createdAt: "2026-07-13",
+    likes: 21900,
+    commentsCount: 884
+  },
+  {
+    id: "yt-2",
+    title: "Izzar So: Kashi na Daya (Episode 1) 🔥",
+    description: "Cikakken shirin drama na Izzar So kashi na 1 daga Bakori TV. Daya daga cikin shahararrun shirin Kannywood na Arewa. #IzzarSo #BakoriTV #Kannywood",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    youtubeUrl: "https://www.youtube.com/watch?v=J3mC8w2B9fI",
+    thumbnailUrl: "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-5",
+    categoryName: "Movies",
+    type: "movie",
+    duration: 1820,
+    views: 891000,
+    featured: false,
+    trending: true,
+    createdAt: "2026-07-12",
+    likes: 43200,
+    commentsCount: 1420
+  },
+  {
+    id: "yt-3",
+    title: "DW Hausa: Gaskiyar Magana Podcast 🎙️",
+    description: "Tattaunawa mai zurfi akan batutuwan da suka shafi kalubalen tattalin arziki, ilimi da shugabanci a Arewacin Najeriya. #DWHausa #Arewa #Podcast",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    youtubeUrl: "https://www.youtube.com/watch?v=N4tPqR2n1t8",
+    thumbnailUrl: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-6",
+    categoryName: "Podcasts",
+    type: "podcast",
+    duration: 615,
+    views: 31200,
+    featured: true,
+    trending: false,
+    createdAt: "2026-07-13",
+    likes: 1250,
+    commentsCount: 78
+  },
+  {
+    id: "yt-4",
+    title: "Al'ummarmu Podcast: Financial Literacy in Arewa 💰",
+    description: "Wannan kashi na tattaunawa akan yadda matasa zasu samu ilimin kudi, kasuwanci, da kuma cin gashin kai a tattalin arzikin yau. #Finance #HausaPodcast #Matasa",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+    youtubeUrl: "https://www.youtube.com/watch?v=qg6Qn_3gT4s",
+    thumbnailUrl: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-6",
+    categoryName: "Podcasts",
+    type: "podcast",
+    duration: 840,
+    views: 18400,
+    featured: false,
+    trending: true,
+    createdAt: "2026-07-11",
+    likes: 830,
+    commentsCount: 42
+  },
   // --- REAL VOTMASS TV FACEBOOK UPLOADS (BABU RUFA-RUFA) ---
   {
     id: "fb-1",

@@ -15,6 +15,12 @@ interface VideoDetailsModalProps {
   onClose: () => void;
 }
 
+function getYouTubeId(url: string) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
 export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalProps) {
   const { 
     user, 
@@ -35,11 +41,13 @@ export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalP
   const [commentText, setCommentText] = useState("");
   const [isPlayerOpen, setIsPlayerOpen] = useState(true);
   const [useFacebookPlayer, setUseFacebookPlayer] = useState(true);
+  const [useYoutubePlayer, setUseYoutubePlayer] = useState(true);
 
   useEffect(() => {
     // Reset states when video changes
     setIsPlayerOpen(true);
     setUseFacebookPlayer(!!video?.facebookUrl);
+    setUseYoutubePlayer(!!video?.youtubeUrl);
     setActiveTab("about");
   }, [video]);
 
@@ -110,6 +118,31 @@ export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalP
             </div>
           )}
 
+          {isPlayerOpen && video.youtubeUrl && (
+            <div className="absolute top-4 left-4 z-40 flex items-center gap-1 bg-black/75 backdrop-blur-md border border-white/10 p-1 rounded-xl shadow-2xl">
+              <button 
+                onClick={() => setUseYoutubePlayer(true)}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-extrabold uppercase tracking-wider transition-colors ${
+                  useYoutubePlayer 
+                    ? 'bg-primary text-white' 
+                    : 'text-text-secondary hover:text-white'
+                }`}
+              >
+                YouTube Feed
+              </button>
+              <button 
+                onClick={() => setUseYoutubePlayer(false)}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-extrabold uppercase tracking-wider transition-colors ${
+                  !useYoutubePlayer 
+                    ? 'bg-primary text-white' 
+                    : 'text-text-secondary hover:text-white'
+                }`}
+              >
+                App Player
+              </button>
+            </div>
+          )}
+
           {isPlayerOpen ? (
             useFacebookPlayer && video.facebookUrl ? (
               <div className="absolute inset-0 w-full h-full">
@@ -122,6 +155,19 @@ export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalP
                   frameBorder="0" 
                   allowFullScreen={true} 
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  className="absolute inset-0 w-full h-full aspect-video"
+                />
+              </div>
+            ) : useYoutubePlayer && video.youtubeUrl ? (
+              <div className="absolute inset-0 w-full h-full">
+                <iframe 
+                  src={`https://www.youtube.com/embed/${getYouTubeId(video.youtubeUrl)}?autoplay=1&rel=0`} 
+                  width="100%" 
+                  height="100%" 
+                  title={video.title}
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  allowFullScreen={true}
                   className="absolute inset-0 w-full h-full aspect-video"
                 />
               </div>
