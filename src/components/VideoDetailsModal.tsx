@@ -33,11 +33,13 @@ export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalP
 
   const [activeTab, setActiveTab] = useState<"about" | "comments">("about");
   const [commentText, setCommentText] = useState("");
-  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(true);
+  const [useFacebookPlayer, setUseFacebookPlayer] = useState(true);
 
   useEffect(() => {
     // Reset states when video changes
-    setIsPlayerOpen(false);
+    setIsPlayerOpen(true);
+    setUseFacebookPlayer(!!video?.facebookUrl);
     setActiveTab("about");
   }, [video]);
 
@@ -83,8 +85,49 @@ export default function VideoDetailsModal({ video, onClose }: VideoDetailsModalP
 
         {/* TOP COVER OR CUSTOM PLAYER */}
         <div className="relative aspect-video w-full bg-black">
+          {isPlayerOpen && video.facebookUrl && (
+            <div className="absolute top-4 left-4 z-40 flex items-center gap-1 bg-black/75 backdrop-blur-md border border-white/10 p-1 rounded-xl shadow-2xl">
+              <button 
+                onClick={() => setUseFacebookPlayer(true)}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-extrabold uppercase tracking-wider transition-colors ${
+                  useFacebookPlayer 
+                    ? 'bg-primary text-white' 
+                    : 'text-text-secondary hover:text-white'
+                }`}
+              >
+                Facebook Feed
+              </button>
+              <button 
+                onClick={() => setUseFacebookPlayer(false)}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-extrabold uppercase tracking-wider transition-colors ${
+                  !useFacebookPlayer 
+                    ? 'bg-primary text-white' 
+                    : 'text-text-secondary hover:text-white'
+                }`}
+              >
+                App Player
+              </button>
+            </div>
+          )}
+
           {isPlayerOpen ? (
-            <VideoPlayer video={video} autoplay={true} />
+            useFacebookPlayer && video.facebookUrl ? (
+              <div className="absolute inset-0 w-full h-full">
+                <iframe 
+                  src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(video.facebookUrl)}&show_text=0&autoplay=true`} 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 'none', overflow: 'hidden' }} 
+                  scrolling="no" 
+                  frameBorder="0" 
+                  allowFullScreen={true} 
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  className="absolute inset-0 w-full h-full aspect-video"
+                />
+              </div>
+            ) : (
+              <VideoPlayer video={video} autoplay={true} />
+            )
           ) : (
             <>
               <Image 

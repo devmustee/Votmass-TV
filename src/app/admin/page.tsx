@@ -12,6 +12,7 @@ import MainLayout from "@/components/MainLayout";
 import { useAppStore } from "@/lib/store";
 import { Video, CATEGORIES } from "@/lib/mockData";
 import VideoDetailsModal from "@/components/VideoDetailsModal";
+import VideoCard from "@/components/VideoCard";
 
 export default function AdminPage() {
   const router = useRouter();
@@ -284,7 +285,10 @@ export default function AdminPage() {
             <div className="space-y-4">
               <h3 className="font-extrabold text-sm uppercase tracking-wider text-white">Publish New Video Broadcast</h3>
               
-              <form onSubmit={handleUploadSubmit} className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                
+                {/* Form Input fields */}
+                <form onSubmit={handleUploadSubmit} className="lg:col-span-2 space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-wider font-bold text-text-secondary">Video Title</label>
                   <input
@@ -407,8 +411,40 @@ export default function AdminPage() {
                   </button>
                 </div>
               </form>
+
+              {/* Live Preview Card */}
+              <div className="space-y-4 lg:col-span-1 bg-surface/40 border border-white/5 p-5 rounded-3xl h-fit sticky top-24">
+                <h4 className="font-extrabold text-[10px] uppercase tracking-widest text-text-secondary border-b border-white/5 pb-2">Live Card Preview</h4>
+                <div className="pointer-events-none select-none">
+                  <VideoCard 
+                    video={{
+                      id: "preview-id",
+                      title: title || "New Broadcast Title",
+                      description: description || "Detailed summary of the television broadcast segment.",
+                      url: videoUrl || "",
+                      thumbnailUrl: thumbnailUrl || "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+                      categoryId: categoryId,
+                      categoryName: CATEGORIES.find(c => c.id === categoryId)?.name || "Channel",
+                      type: contentType,
+                      duration: parseInt(duration) || 600,
+                      views: 0,
+                      featured: false,
+                      trending: false,
+                      createdAt: new Date().toISOString().split("T")[0],
+                      likes: 0,
+                      commentsCount: 0
+                    }}
+                    onSelect={() => {}}
+                  />
+                </div>
+                <p className="text-[10px] text-text-secondary leading-relaxed text-center font-light pt-1">
+                  This is a live preview of how your video card will appear on the browse feed layouts.
+                </p>
+              </div>
+
             </div>
-          )}
+          </div>
+        )}
 
           {/* MANAGE VIDEOS TAB */}
           {activeTab === "videos" && (

@@ -70,10 +70,17 @@ export default function VideoPlayer({ video, onEnded, autoplay = true }: VideoPl
     }
   }, [playbackSpeed, volume, isMuted, video]);
 
-  // Autoplay handler
+  // Autoplay and seek to history progress on load
   useEffect(() => {
-    if (autoplay && videoRef.current) {
-      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    if (videoRef.current) {
+      const savedTime = useAppStore.getState().watchHistory[video.id];
+      if (savedTime && savedTime < video.duration - 10) {
+        videoRef.current.currentTime = savedTime;
+        setCurrentTime(savedTime);
+      }
+      if (autoplay) {
+        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
     }
   }, [autoplay, video]);
 

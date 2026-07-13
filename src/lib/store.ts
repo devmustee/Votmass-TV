@@ -114,7 +114,7 @@ export const useAppStore = create<AppState>()(
       likedVideoIds: ["v-feat-1"],
       bookmarkedVideoIds: ["m-1"],
       downloadedVideoIds: [],
-      watchHistory: { "m-2": 240 },
+      watchHistory: { "m-2": 240, "fb-1": 180 },
 
       addVideo: (video) => {
         set((state) => ({

@@ -24,6 +24,7 @@ export interface Video {
   createdAt: string;
   likes: number;
   commentsCount: number;
+  facebookUrl?: string;
 }
 
 export interface Comment {
@@ -65,6 +66,97 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const MOCK_VIDEOS: Video[] = [
+  // --- REAL VOTMASS TV FACEBOOK UPLOADS (BABU RUFA-RUFA) ---
+  {
+    id: "fb-1",
+    title: "BABU RUFA-RUFA: Kashi na Farko",
+    description: "Shirin da ke tattauna batutuwan da suka shafi rayuwar yau da kullum da kalubalen shugabanci ba tare da ɓoye gaskiya ba. MC Sabi Talk tare da Sadiq SY.",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    facebookUrl: "https://web.facebook.com/share/v/1Janebz4ov/",
+    thumbnailUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-1",
+    categoryName: "Leadership & Governance",
+    type: "video",
+    duration: 845,
+    views: 8900,
+    featured: true,
+    trending: true,
+    createdAt: "2026-07-13",
+    likes: 410,
+    commentsCount: 15
+  },
+  {
+    id: "fb-2",
+    title: "BABBAR MAGANA🔥 KADAN DAGA SHIRIN BABU RUFA-RUFA",
+    description: "MC Sabi Talk da Sadiq SY a cikin shirin Babu Rufa-Rufa na Votmass TV. #SABITALK #facebookreels #facebookviral",
+    url: "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-looking-at-camera-34282-large.mp4",
+    facebookUrl: "https://web.facebook.com/share/v/1BrENBBiHc/",
+    thumbnailUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=400&auto=format&fit=crop",
+    categoryId: "cat-2",
+    categoryName: "Youth Development",
+    type: "short",
+    duration: 40,
+    views: 12400,
+    featured: false,
+    trending: true,
+    createdAt: "2026-07-13",
+    likes: 1850,
+    commentsCount: 92
+  },
+  {
+    id: "fb-3",
+    title: "Babu Rufa-Rufa: Davido da Rarara Muhawara",
+    description: "Muhawara mai zafi kan Musayar yawu da kalaman da suka gudana tsakanin Davido da Rarara. #baburufarufa #votmasstv #davido #rarara",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    facebookUrl: "https://web.facebook.com/share/v/14kAsFo4AaX/",
+    thumbnailUrl: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-6",
+    categoryName: "Podcasts",
+    type: "podcast",
+    duration: 540,
+    views: 7300,
+    featured: false,
+    trending: true,
+    createdAt: "2026-07-12",
+    likes: 620,
+    commentsCount: 44
+  },
+  {
+    id: "fb-4",
+    title: "Highlights: Babu Rufa-Rufa Votmass TV",
+    description: "Highlights na shirin Babu Rufa-Rufa na Votmass TV. #highlights #reels",
+    url: "https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-34281-large.mp4",
+    facebookUrl: "https://web.facebook.com/share/r/1JqTURLkYK/",
+    thumbnailUrl: "https://images.unsplash.com/photo-1487530811176-3780de880c2d?q=80&w=400&auto=format&fit=crop",
+    categoryId: "cat-2",
+    categoryName: "Youth Development",
+    type: "short",
+    duration: 30,
+    views: 9800,
+    featured: false,
+    trending: false,
+    createdAt: "2026-07-11",
+    likes: 1200,
+    commentsCount: 38
+  },
+  {
+    id: "fb-5",
+    title: "Cikakken Hirar MC Sabi Talk & Sadiq SY (Part 1)",
+    description: "Cikken Hirar mu da MC Sabi Talk Tare da Sadiq SY Acikin shirin mu Na BABU RUFA-RUFA Kashi Na Daya 1. #leaderleneke #Adamawa",
+    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubTee.mp4",
+    facebookUrl: "https://web.facebook.com/share/v/1Hak229wAu/",
+    thumbnailUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+    categoryId: "cat-1",
+    categoryName: "Leadership & Governance",
+    type: "video",
+    duration: 980,
+    views: 6500,
+    featured: false,
+    trending: false,
+    createdAt: "2026-07-10",
+    likes: 340,
+    commentsCount: 19
+  },
   // --- HERO / FEATURED VIDEOS ---
   {
     id: "v-feat-1",

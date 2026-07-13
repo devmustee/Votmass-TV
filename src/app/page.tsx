@@ -20,6 +20,7 @@ export default function HomePage() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [mounted, setMounted] = useState(false);
+  const [heroHovered, setHeroHovered] = useState(false);
 
   const featuredVideos = videos.filter(v => v.featured);
   const currentHero = featuredVideos[heroIndex] || featuredVideos[0];
@@ -69,22 +70,37 @@ export default function HomePage() {
         <>
           {/* 1. CINEMATIC HERO SPOTLIGHT */}
           {currentHero && (
-        <section className="relative w-full h-[55vh] min-h-[460px] md:h-[65vh] md:min-h-[500px] rounded-3xl overflow-hidden mb-12 border border-white/5 shadow-2xl bg-black group/hero">
+        <section 
+          onMouseEnter={() => setHeroHovered(true)}
+          onMouseLeave={() => setHeroHovered(false)}
+          className="relative w-full h-[55vh] min-h-[460px] md:h-[65vh] md:min-h-[500px] rounded-3xl overflow-hidden mb-12 border border-white/5 shadow-2xl bg-black group/hero"
+        >
           {/* Background image & gradient overlay */}
           <div className="absolute inset-0">
-            <Image 
-              src={currentHero.thumbnailUrl} 
-              alt={currentHero.title} 
-              fill 
-              priority
-              className="object-cover opacity-50 transition-transform duration-10000 scale-105 group-hover/hero:scale-100"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/50 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/30 to-transparent" />
+            {heroHovered ? (
+              <video
+                src={currentHero.url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover opacity-40 transition-opacity duration-700 animate-in fade-in"
+              />
+            ) : (
+              <Image 
+                src={currentHero.thumbnailUrl} 
+                alt={currentHero.title} 
+                fill 
+                priority
+                className="object-cover opacity-50 transition-transform duration-10000 scale-105 group-hover/hero:scale-100"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/50 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/30 to-transparent z-10" />
           </div>
 
           {/* Featured details content */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-14 space-y-4 max-w-2xl z-10">
+          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-14 space-y-4 max-w-2xl z-20">
             <div className="flex items-center gap-2">
               <span className="bg-primary/30 border border-primary/40 text-primary text-[9px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-md flex items-center gap-1 shadow-md">
                 <Sparkles size={8} fill="currentColor" /> FEATURED SPOTLIGHT
